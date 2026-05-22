@@ -82,7 +82,7 @@ def _card_to_dict(card: Card) -> dict[str, Any]:
         "archived": card.archived,
         "tasks_done": card.tasks_done,
         "tasks_total": card.tasks_total,
-        "time_on_board": card.time_on_board,
+        "time_on_board": {"time": card.time_on_board.time, "is_stopped": card.time_on_board.is_stopped} if card.time_on_board else None,
         "time_on_columns": card.time_on_columns,
         "custom_fields": [
             {
@@ -92,6 +92,7 @@ def _card_to_dict(card: Card) -> dict[str, Any]:
                 "link": cf.link,
                 "members": cf.members,
                 "color": cf.color,
+                "timeline": cf.timeline.model_dump() if cf.timeline else None,
             }
             for cf in card.custom_fields
         ],
@@ -245,9 +246,22 @@ def get_card_details(card: str, ctx: Context, board: str | None = None) -> dict[
             for comment in comments
         ]
 
+        # Fetch custom fields with their values
+        custom_fields = client.get_custom_fields_card(c.card_common_id)
+        custom_field_values = [
+            {
+                "custom_field_id": cf.custom_field_id,
+                "value": cf.value,
+                "color": cf.color,
+                "timeline": cf.timeline.model_dump() if cf.timeline else None,
+            }
+            for cf in custom_fields
+        ]
+
         result = _card_to_dict(c)
         result["tasklists"] = tasklists_data
         result["comments"] = comments_data
+        result["custom_field_values"] = custom_field_values
         # Clean description to remove auto-appended tasklist checkboxes
         result["detailed_description"] = _strip_tasklist_from_description(
             result["detailed_description"], tasklists_data

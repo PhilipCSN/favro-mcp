@@ -92,17 +92,26 @@ class CardAssignment(BaseModel):
     completed: bool = False
 
 
+class CardTimeline(BaseModel):
+    """Timeline asobject for custom field values."""
+
+    start_date: str | None = Field(default=None, alias="startDate")
+    due_date: str | None = Field(default=None, alias="dueDate")
+    show_time: bool | None = Field(default=None, alias="showTime")
+
+
 class CardCustomField(BaseModel):
     """Card custom field value."""
 
     custom_field_id: str = Field(alias="customFieldId")
-    value: str | int | float | list[str] | dict[str, Any] | None = None
+    value: str | int | float | list[str] | dict[str, Any] | bool | CardTimeline | None = None
     total: float | None = None
     link: dict[str, str] | None = None
     members: list[str] | None = None
     status: str | None = None
     color: str | None = None
-
+    date: str | None = None
+    timeline: CardTimeline | None = Field(default=None, alias="timeline")
 
 class CardTimeOnBoard(BaseModel):
     """Time card has spent on board."""

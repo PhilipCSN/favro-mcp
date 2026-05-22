@@ -30,6 +30,7 @@ ENV/
 .vscode/
 *.swp
 *.swo
+.code-workspace
 
 # Environment
 .env
@@ -51,3 +52,8 @@ uv.lock
 
 # Local MCP configuration (may contain credentials)
 .mcp.json
+
+# Claude
+.claude/
+.ai/
+CLAUDE.md
