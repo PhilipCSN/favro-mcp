@@ -10,7 +10,6 @@ from favro_mcp.api.models import (
     Collection,
     Column,
     Comment,
-    CardCustomField,
     Organization,
     Tag,
     Task,
@@ -619,11 +618,6 @@ class FavroClient:
     def get_custom_fields(self) -> list[dict[str, Any]]:
         """Get all custom fields in the organization."""
         return self._paginate_all("/customfields")
-    
-    def get_custom_fields_card(self, card_common_id: str) -> list[CardCustomField]:
-        """Get custom field values for a specific card."""
-        response = self._get("/cards/customfields", {"cardCommonId": card_common_id})
-        return [CardCustomField.model_validate(cf) for cf in response.get("customFields", [])]
 
     # Task list methods
     def get_tasklists(self, card_common_id: str) -> list[TaskList]:

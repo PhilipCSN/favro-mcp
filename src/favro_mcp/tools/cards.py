@@ -246,8 +246,7 @@ def get_card_details(card: str, ctx: Context, board: str | None = None) -> dict[
             for comment in comments
         ]
 
-        # Fetch custom fields with their values
-        custom_fields = client.get_custom_fields_card(c.card_common_id)
+        # Custom field values are already embedded on the card object
         custom_field_values = [
             {
                 "custom_field_id": cf.custom_field_id,
@@ -255,7 +254,7 @@ def get_card_details(card: str, ctx: Context, board: str | None = None) -> dict[
                 "color": cf.color,
                 "timeline": cf.timeline.model_dump() if cf.timeline else None,
             }
-            for cf in custom_fields
+            for cf in c.custom_fields
         ]
 
         result = _card_to_dict(c)
