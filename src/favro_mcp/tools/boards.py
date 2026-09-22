@@ -6,6 +6,7 @@ from fastmcp import Context
 
 from favro_mcp.context import get_favro_context
 from favro_mcp.resolvers import BoardResolver
+from favro_mcp.resolvers.share_link import strip_share_link
 from favro_mcp.server import mcp
 
 
@@ -67,6 +68,7 @@ def get_board(board_id: str, ctx: Context) -> dict[str, Any]:
     """
     favro_ctx = get_favro_context(ctx)
     favro_ctx.require_org()
+    board_id = strip_share_link(board_id)
     with favro_ctx.get_client() as client:
         board = client.get_widget(board_id)
         columns = client.get_columns(board_id)

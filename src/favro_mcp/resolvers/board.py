@@ -4,12 +4,16 @@ from favro_mcp.api.client import FavroNotFoundError
 from favro_mcp.api.models import Widget
 
 from .base import BaseResolver
+from .share_link import strip_share_link
 
 
 class BoardResolver(BaseResolver[Widget]):
     """Resolver for boards/widgets."""
 
     entity_type = "board"
+
+    def resolve(self, identifier: str, **context: str | None) -> Widget:
+        return super().resolve(strip_share_link(identifier), **context)
 
     def _fetch_all(self, **context: str | None) -> list[Widget]:
         return self.client.get_widgets()

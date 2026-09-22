@@ -6,6 +6,7 @@ from favro_mcp.api.client import FavroNotFoundError
 from favro_mcp.api.models import Card
 
 from .base import AmbiguousMatchError, BaseResolver, NotFoundError
+from .share_link import strip_share_link
 
 
 class CardResolver(BaseResolver[Card]):
@@ -73,6 +74,8 @@ class CardResolver(BaseResolver[Card]):
             AmbiguousMatchError: Multiple cards match
             ValueError: Missing board_id for name lookup
         """
+        identifier = strip_share_link(identifier)
+
         # Check if it's a sequential ID
         seq_id = self._parse_sequential_id(identifier)
         if seq_id is not None:
